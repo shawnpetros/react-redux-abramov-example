@@ -27,8 +27,4 @@ const fakeDatabase = {
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export const fetchTodos = () => {
-  delay(500).then(() => {
-    return fakeDatabase.todos;
-  });
-};
+export const fetchTodos = () => delay(500).then(() => fakeDatabase.todos);

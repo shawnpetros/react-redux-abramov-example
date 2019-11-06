@@ -6,7 +6,9 @@ import configureStore from "./store";
 import { fetchTodos } from "./utils";
 import "./styles.css";
 
-// console.log(fetchTodos());
+console.log(fetchTodos);
+
+fetchTodos().then(todos => console.log(todos));
 
 const store = configureStore();
 
