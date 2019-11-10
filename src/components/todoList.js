@@ -1,14 +1,13 @@
 import React from "react";
-import { toggleTodo } from "../store/actions";
-import { connect } from "react-redux";
 import "./todoStyles.css";
 
 const TodoList = ({ todos = [], toggleTodo }) => {
-  return (
-    <ul>
+  const getClasses = completed => (completed ? "done" : "");
+  return todos.length > 0 ? (
+    <ul className="list">
       {todos.map(todo => (
         <li
-          className={todo.completed && "done"}
+          className={`list-item ${getClasses(todo.completed)}`}
           key={todo.id}
           onClick={() => toggleTodo(todo.id)}
         >
@@ -16,10 +15,7 @@ const TodoList = ({ todos = [], toggleTodo }) => {
         </li>
       ))}
     </ul>
-  );
+  ) : null;
 };
 
-export default connect(
-  null,
-  { toggleTodo }
-)(TodoList);
+export default TodoList;

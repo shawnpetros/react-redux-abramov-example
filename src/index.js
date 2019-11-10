@@ -4,9 +4,8 @@ import { Provider } from "react-redux";
 import App from "./components/app";
 import configureStore from "./store";
 import { fetchTodos } from "./utils";
+import "bulma/css/bulma.css";
 import "./styles.css";
-
-console.log(fetchTodos);
 
 fetchTodos().then(todos => console.log(todos));
 

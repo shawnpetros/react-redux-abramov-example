@@ -25,6 +25,21 @@ const fakeDatabase = {
   ]
 };
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+function fetchZen() {
+  return fetch("https://api.github.com/zen").then(res => res.text());
+}
 
+function createTodo(text) {
+  const newTodo = {
+    completed: false,
+    id: v4(),
+    text
+  };
+  fakeDatabase.todos.push(newTodo);
+  return newTodo;
+}
+
+export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchTodos = () => delay(500).then(() => fakeDatabase.todos);
+export const addTodo = text => delay(500).then(() => createTodo(text));
+export const getZen = () => delay(1000).then(() => fetchZen());

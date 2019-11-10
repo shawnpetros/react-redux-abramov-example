@@ -1,7 +1,12 @@
 import { v4 } from "node-uuid";
 
 export const ADD_TODO = "ADD_TODO";
+export const ZEN_TODO = "ZEN_TODO";
 export const TOGGLE_TODO = "TOGGLE_TODO";
+
+export const zenTodo = () => ({
+  type: ZEN_TODO
+});
 
 export const addTodo = text => ({
   type: ADD_TODO,
