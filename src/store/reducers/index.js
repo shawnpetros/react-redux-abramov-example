@@ -1,35 +1,25 @@
-import { ADD_TODO, TOGGLE_TODO } from "../actions";
+import { RECIEVE_TODOS, GET_TODOS } from "../actions";
 import { combineReducers } from "redux";
 
-const todo = (state = {}, action) => {
+const isFetching = (state = false, action) => {
   switch (action.type) {
-    case ADD_TODO:
-      return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      };
-    case TOGGLE_TODO:
-      if (state.id !== action.id) {
-        return state;
-      }
-      return {
-        ...state,
-        completed: !state.completed
-      };
+    case GET_TODOS:
+      return true;
+    case RECIEVE_TODOS:
+      return false;
     default:
       return state;
   }
 };
 
-const byId = (state = [], action) => {
+const byId = (state = {}, action) => {
   switch (action.type) {
-    case ADD_TODO:
-    case TOGGLE_TODO:
-      return {
-        ...state,
-        [action.id]: todo(state[action.id], action)
-      };
+    case RECIEVE_TODOS:
+      const nextState = { ...state };
+      action.response.map(todo => {
+        nextState[todo.id] = todo;
+      });
+      return nextState;
     default:
       return state;
   }
@@ -37,14 +27,15 @@ const byId = (state = [], action) => {
 
 const allIds = (state = [], action) => {
   switch (action.type) {
-    case ADD_TODO:
-      return [...state, action.id];
+    case RECIEVE_TODOS:
+      return action.response.map(todo => todo.id);
     default:
       return state;
   }
 };
 
 const todos = combineReducers({
+  isFetching,
   allIds,
   byId
 });
