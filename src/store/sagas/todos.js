@@ -1,4 +1,4 @@
-import { all, call, put, takeLeading, retry } from "redux-saga/effects";
+import { all, call, put, takeLeading } from "redux-saga/effects";
 import {
   recieveTodos,
   getTodos,
@@ -12,7 +12,7 @@ import * as Api from "../../utils";
 // workers
 function* fetchAllTodos() {
   try {
-    const todos = yield retry(3, 2000, Api.fetchTodos);
+    const todos = yield call(Api.fetchTodos);
     yield put(recieveTodos(todos));
   } catch (e) {
     yield put(getTodosFailed(e));
@@ -20,14 +20,22 @@ function* fetchAllTodos() {
 }
 
 function* addZenTodo() {
-  const zen = yield call(Api.getZen);
-  yield call(Api.addTodo, zen);
-  yield put(getTodos());
+  try {
+    const zen = yield call(Api.getZen);
+    yield call(Api.addTodo, zen);
+    yield put(getTodos());
+  } catch (e) {
+    yield put(getTodosFailed(e));
+  }
 }
 
 function* doAdd(action) {
-  yield call(Api.addTodo, action.text);
-  yield put(getTodos());
+  try {
+    yield call(Api.addTodo, action.text);
+    yield put(getTodos());
+  } catch (e) {
+    yield put(getTodosFailed(e));
+  }
 }
 
 // watchers
