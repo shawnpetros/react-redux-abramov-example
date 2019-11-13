@@ -1,24 +1,22 @@
-import { all, call, put, takeLeading } from "redux-saga/effects";
+import { all, call, put, takeLeading, retry } from "redux-saga/effects";
 import {
   recieveTodos,
   getTodos,
-  ZEN_TODO,
+  ADD_ZEN,
   ADD_TODO,
-  GET_TODOS
+  GET_TODOS,
+  getTodosFailed
 } from "../actions";
 import * as Api from "../../utils";
 
-const { delay } = Api;
-
 // workers
-function* helloSaga() {
-  yield delay(0);
-  console.log("hello sagas!");
-}
-
 function* fetchAllTodos() {
-  const todos = yield call(Api.fetchTodos);
-  yield put(recieveTodos(todos));
+  try {
+    const todos = yield retry(3, 2000, Api.fetchTodos);
+    yield put(recieveTodos(todos));
+  } catch (e) {
+    yield put(getTodosFailed(e));
+  }
 }
 
 function* addZenTodo() {
@@ -34,7 +32,7 @@ function* doAdd(action) {
 
 // watchers
 function* watchForZen() {
-  yield takeLeading(ZEN_TODO, addZenTodo);
+  yield takeLeading(ADD_ZEN, addZenTodo);
 }
 
 function* watchForAdd() {
@@ -46,5 +44,5 @@ function* watchForGet() {
 }
 
 export default function* todoRoot() {
-  yield all([helloSaga(), watchForZen(), watchForAdd(), watchForGet()]);
+  yield all([watchForZen(), watchForAdd(), watchForGet()]);
 }

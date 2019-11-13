@@ -1,45 +1,67 @@
 import { v4 } from "node-uuid";
 // fake backend
-const fakeDatabase = {
-  todos: [
-    {
-      completed: false,
-      text: "hi ho",
-      id: v4()
-    },
-    {
-      completed: true,
-      text: "this is a todo",
-      id: v4()
-    },
-    {
-      completed: false,
-      text: "foo",
-      id: v4()
-    },
-    {
-      completed: false,
-      text: "bar",
-      id: v4()
-    }
-  ]
-};
+const seedData = [
+  {
+    completed: false,
+    text: "hi ho",
+    id: v4()
+  },
+  {
+    completed: true,
+    text: "this is a todo",
+    id: v4()
+  },
+  {
+    completed: false,
+    text: "foo",
+    id: v4()
+  },
+  {
+    completed: false,
+    text: "bar",
+    id: v4()
+  }
+];
 
-function fetchZen() {
-  return fetch("https://api.github.com/zen").then(res => res.text());
-}
+const readFromLocalStorage = () =>
+  JSON.parse(window.localStorage.getItem("todos"));
 
-function createTodo(text) {
+const writeToLocalStorage = db =>
+  window.localStorage.setItem("todos", JSON.stringify(db));
+
+const fetchZen = () =>
+  fetch("https://api.github.com/zen").then(res => res.text());
+
+const createTodo = text => {
   const newTodo = {
     completed: false,
     id: v4(),
     text
   };
-  fakeDatabase.todos.push(newTodo);
+  const todos = readFromLocalStorage();
+  todos.push(newTodo);
+  writeToLocalStorage(todos);
   return newTodo;
-}
+};
 
-export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-export const fetchTodos = () => delay(500).then(() => fakeDatabase.todos);
-export const addTodo = text => delay(500).then(() => createTodo(text));
-export const getZen = () => delay(1000).then(() => fetchZen());
+export const readOrSeed = () => {
+  const content = readFromLocalStorage();
+  if (!content) writeToLocalStorage(seedData);
+};
+
+export const delay = () => {
+  const ms = Math.round(Math.random() * 1500);
+  return new Promise((resolve, reject) =>
+    setTimeout(() => {
+      const shouldError = Math.round(Math.random() * 50) > 25;
+      if (shouldError) reject(new Error("an api error occured"));
+      resolve();
+    }, ms)
+  );
+};
+export const fetchTodos = () => {
+  console.log("fetchTodos was called");
+  return delay().then(readFromLocalStorage);
+};
+export const addTodo = text => delay().then(() => createTodo(text));
+export const getZen = () => delay().then(() => fetchZen());

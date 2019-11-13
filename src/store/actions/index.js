@@ -1,10 +1,16 @@
 import { v4 } from "node-uuid";
 
 export const ADD_TODO = "ADD_TODO";
-export const ZEN_TODO = "ZEN_TODO";
+export const ADD_ZEN = "ADD_ZEN";
 export const GET_TODOS = "GET_TODOS";
+export const GET_TODOS_FAILED = "GET_TODOS_FAILED";
 export const RECIEVE_TODOS = "RECIEVE_TODOS";
 export const TOGGLE_TODO = "TOGGLE_TODO";
+
+export const getTodosFailed = e => ({
+  type: GET_TODOS_FAILED,
+  error: e
+});
 
 export const getTodos = () => ({
   type: GET_TODOS
@@ -16,7 +22,7 @@ export const recieveTodos = response => ({
 });
 
 export const zenTodo = () => ({
-  type: ZEN_TODO
+  type: ADD_ZEN
 });
 
 export const addTodo = text => ({
