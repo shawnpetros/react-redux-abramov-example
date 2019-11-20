@@ -1,4 +1,7 @@
 import { v4 } from "node-uuid";
+
+export { default as sagaTestHelper } from "./sagaTestHelper";
+
 // fake backend
 const seedData = [
   {
@@ -53,15 +56,12 @@ export const delay = () => {
   const ms = Math.round(Math.random() * 1500);
   return new Promise((resolve, reject) =>
     setTimeout(() => {
-      const shouldError = Math.round(Math.random() * 50) > 25;
+      const shouldError = Math.round(Math.random() * 50) > 45;
       if (shouldError) reject(new Error("an api error occured"));
       resolve();
     }, ms)
   );
 };
-export const fetchTodos = () => {
-  console.log("fetchTodos was called");
-  return delay().then(readFromLocalStorage);
-};
+export const fetchTodos = () => delay().then(readFromLocalStorage);
 export const addTodo = text => delay().then(() => createTodo(text));
 export const getZen = () => delay().then(() => fetchZen());

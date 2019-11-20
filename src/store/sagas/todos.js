@@ -10,7 +10,7 @@ import {
 import * as Api from "../../utils";
 
 // workers
-function* fetchAllTodos() {
+export function* fetchAllTodos() {
   try {
     const todos = yield call(Api.fetchTodos);
     yield put(recieveTodos(todos));
@@ -19,7 +19,7 @@ function* fetchAllTodos() {
   }
 }
 
-function* addZenTodo() {
+export function* addZenTodo() {
   try {
     const zen = yield call(Api.getZen);
     yield call(Api.addTodo, zen);
@@ -29,7 +29,7 @@ function* addZenTodo() {
   }
 }
 
-function* doAdd(action) {
+export function* doAdd(action) {
   try {
     yield call(Api.addTodo, action.text);
     yield put(getTodos());
@@ -39,15 +39,15 @@ function* doAdd(action) {
 }
 
 // watchers
-function* watchForZen() {
+export function* watchForZen() {
   yield takeLeading(ADD_ZEN, addZenTodo);
 }
 
-function* watchForAdd() {
+export function* watchForAdd() {
   yield takeLeading(ADD_TODO, doAdd);
 }
 
-function* watchForGet() {
+export function* watchForGet() {
   yield takeLeading(GET_TODOS, fetchAllTodos);
 }
 
