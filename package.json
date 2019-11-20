@@ -6,7 +6,6 @@
   "main": "src/index.js",
   "dependencies": {
     "bulma": "^0.8.0",
-    "jest": "24.9.0",
     "lodash": "^4.17.15",
     "node-uuid": "1.4.8",
     "react": "16.8.6",
